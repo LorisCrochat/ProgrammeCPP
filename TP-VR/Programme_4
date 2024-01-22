@@ -1,0 +1,58 @@
+// Arduino code
+//
+void setup()
+{
+  unsigned int i;
+  
+  Serial.begin(115200);
+  
+  for (i = 2; i <= 4; i++)
+  {
+    pinMode(i, INPUT_PULLUP);
+  }
+}
+
+void loop()
+{
+  static int previousAngle = -1;  // Variable pour stocker l'angle précédent
+  int b2 = digitalRead(4);
+  int b1 = digitalRead(3);
+  int b0 = digitalRead(2);
+    
+  int angle = (b0 << 2) | (b1 << 1) | b2;
+  
+  if (angle != previousAngle)  // Vérifier s'il y a eu un changement
+  {
+    switch (angle)
+    {
+      case 0:
+        Serial.println("NORD");
+        break;
+      case 1:  
+        Serial.println("NORD-EST");
+        break;
+      case 2:
+        Serial.println("SUD-EST");
+        break;
+      case 3:
+        Serial.println("EST");
+        break;
+      case 4:
+        Serial.println("NORD-OUEST");
+        break;
+      case 5:
+        Serial.println("OUEST");
+        break;
+      case 6:
+        Serial.println("SUD");
+        break;
+      case 7:
+        Serial.println("SUD-OUEST");
+        break;
+    }
+    
+    previousAngle = angle;  // Mettre à jour la valeur de l'angle précédent
+  }
+  
+  delay(2000);
+}

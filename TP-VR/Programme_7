@@ -1,0 +1,77 @@
+#include <SoftwareSerial.h>
+
+SoftwareSerial BTSerial(11, 10); // RX | TX de l'ARDUINO donc TX | RX du composant HC-05
+char c = ' ';
+
+void setup() {
+  Serial.begin(115200); // Utilisation d'une vitesse de communication série plus élevée
+  BTSerial.begin(9600); // Paramétrage de la liaison série entre l’ARDUINO et le HC05
+  Serial.println("\nCommunication en Bluetooth avec un module HC05");
+
+  for (unsigned int i = 2; i <= 4; i++) {
+    pinMode(i, INPUT_PULLUP);
+  }
+}
+
+void clearDisplay() {
+  // Fonction pour vider l'affichage
+  BTSerial.println("CLEAR_DISPLAY"); // Utilisez println pour envoyer une nouvelle ligne à la fin
+}
+
+void loop() {
+  // Lecture du module BT et affichage des données sur le moniteur série de l'Ordinateur
+  if (BTSerial.available()) // si une donnée est arrivée en Bluetooth
+  {
+    c = BTSerial.read(); // on lit le caractère
+    Serial.write(c); // on l’envoie au PC sur la ligne série RS232
+    
+    // Vérifier si la commande spécifique pour vider l'affichage est reçue
+    if (c == 'C') {
+      clearDisplay();
+    }
+  }
+
+  // Lecture du moniteur série et envoi des données sur le module BT
+  if (Serial.available()) // si une donnée est arrivée depuis le PC en RS232
+  {
+    c = Serial.read(); // on lit le caractère
+    BTSerial.write(c); // on l’envoie au Smartphone en Bluetooth
+  }
+  
+  static int previousAngle = -1;  // Variable pour stocker l'angle précédent
+  int b2 = digitalRead(4);
+  int b1 = digitalRead(3);
+  int b0 = digitalRead(2);
+  int angle = (b0 << 2) | (b1 << 1) | b2;
+
+  if (angle != previousAngle)  // Vérifier s'il y a eu un changement
+  {
+    switch (angle) {
+      case 0:
+        BTSerial.println(0);
+        break;
+      case 1:  
+        BTSerial.println(1);
+        break;
+      case 2:
+        BTSerial.println(2);
+        break;
+      case 3:
+        BTSerial.println(3);
+        break;
+      case 4:
+        BTSerial.println(4);
+        break;
+      case 5:
+        BTSerial.println(5);
+        break;
+      case 6:
+        BTSerial.println(6);
+        break;
+      case 7:
+        BTSerial.println(7);
+        break;
+    }
+    previousAngle = angle;  // Mettre à jour la valeur de l'angle précédent
+  }
+}

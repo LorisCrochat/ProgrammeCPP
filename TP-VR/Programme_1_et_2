@@ -1,0 +1,24 @@
+#include <SoftwareSerial.h>
+SoftwareSerial BTSerial(11, 10); // RX | TX de l'ARDUINO donc TX | RX du composant HC-05
+char c = ' ';
+void setup()
+{
+Serial.begin(9600); // Paramétrage de la liaison série entre l’ARDUINO et le PC
+BTSerial.begin(9600); // Paramétrage de la liaison série entre l’ARDUINO et le HC05
+Serial.println("\nCommunication en Bluetooth avec un module HC05");
+}
+void loop()
+{
+// Lecture du module BT et affichage des données sur le moniteur série de l'Ordinateur
+if (BTSerial.available()) // si une donnée est arrivée en Bluetooth
+{
+c = BTSerial.read(); // on lit le caractère
+Serial.write(c); // on l’envoie au PC sur la ligne série RS232
+}
+// Lecture du moniteur série et envoi des données sur le module BT
+if (Serial.available()) // si une donnée est arrivée depuis le PC en RS232
+{
+c = Serial.read(); // on lit le caractère
+BTSerial.write(c); // on l’envoie au Smartphone en Bluetooth
+}
+}
