@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <bcm2835.h>
+
 
 #define LED_PIN RPI_GPIO_P1_18 // GPIO pin 18
 
