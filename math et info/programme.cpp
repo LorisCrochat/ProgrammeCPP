@@ -1,4 +1,4 @@
-#include <cmath>
+#include <cmath.h>
 
 double f(double x) {
     return 3 * log(1 + x * exp(-x));
